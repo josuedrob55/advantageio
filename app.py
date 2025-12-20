@@ -3,165 +3,218 @@ import streamlit as st
 # --- PAGE CONFIG ---
 st.set_page_config(page_title="Vantage | Forge Your Future", page_icon="🌉", layout="wide")
 
-# --- MODERN CSS UI ---
+# --- PROFESSIONAL SaaS CSS ---
 st.markdown("""
     <style>
-    /* Hide Streamlit Branding */
+    /* Professional Typography */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+    
+    html, body, [class*="st-"] {
+        font-family: 'Inter', sans-serif;
+    }
+
+    /* Hide Streamlit Header/Footer */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
     
-    /* Main Background & Fonts */
-    .stApp {
-        background-color: #ffffff;
-        font-family: 'Inter', -apple-system, sans-serif;
-    }
-    
-    /* Hero Section */
-    .hero-container {
-        padding: 60px 20px;
+    /* Hero Section: High Contrast */
+    .hero-section {
+        background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+        padding: 100px 40px;
+        border-radius: 24px;
         text-align: center;
-        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-        color: white;
-        border-radius: 20px;
+        color: white !important;
         margin-bottom: 40px;
     }
     
-    /* Custom Cards */
-    .card {
-        background-color: #f9fafb;
-        padding: 24px;
-        border-radius: 16px;
-        border: 1px solid #e5e7eb;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        cursor: pointer;
+    .hero-section h1 {
+        color: white !important;
+        font-size: 3.8rem !important;
+        font-weight: 800 !important;
+        letter-spacing: -1px;
+        margin-bottom: 15px !important;
     }
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    
+    .hero-section p {
+        color: #94a3b8 !important;
+        font-size: 1.3rem !important;
+        max-width: 800px;
+        margin: 0 auto !important;
+    }
+
+    /* Navigation Styling */
+    .nav-link {
+        color: #1e3a8a !important;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    /* Professional Card Layout */
+    .category-card {
+        background: #ffffff;
+        padding: 40px;
+        border-radius: 20px;
+        border: 1px solid #e2e8f0;
+        text-align: left;
+        height: 100%;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        transition: 0.3s;
+    }
+    
+    .category-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
         border-color: #3b82f6;
     }
-    
-    /* Buttons */
-    .stButton>button {
-        border-radius: 10px;
-        background-color: #1e3a8a;
-        color: white;
-        font-weight: 600;
-        border: none;
-        padding: 10px 24px;
+
+    .category-card h3 {
+        color: #0f172a !important;
+        font-size: 1.5rem !important;
+        margin-bottom: 15px !important;
     }
-    
-    /* Navigation Bar Replacement */
-    .nav-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 0px;
-        margin-bottom: 30px;
-        border-bottom: 1px solid #f3f4f6;
+
+    /* Professional Content Images */
+    .about-img {
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        max-width: 100%;
+        height: auto;
     }
+
+    /* Buttons Override */
+    .stButton > button {
+        border-radius: 12px !important;
+        padding: 10px 25px !important;
+        font-weight: 600 !important;
+        border: none !important;
+        background-color: #1e3a8a !important;
+        color: white !important;
+    }
+
+    .secondary-btn > div > button {
+        background-color: #f1f5f9 !important;
+        color: #1e3a8a !important;
+    }
+
     </style>
     """, unsafe_allow_html=True)
 
-# --- SESSION STATE FOR NAVIGATION ---
-# This allows us to switch pages without using the sidebar
+# --- NAVIGATION LOGIC ---
 if 'page' not in st.session_state:
     st.session_state.page = 'Home'
 
-def set_page(page_name):
+def navigate_to(page_name):
     st.session_state.page = page_name
 
-# --- CUSTOM TOP NAV ---
-col_nav1, col_nav2 = st.columns([1, 1])
-with col_nav1:
-    st.markdown("### 🌉 VANTAGE")
-with col_nav2:
-    cols = st.columns(4)
-    if cols[0].button("Home"): set_page('Home')
-    if cols[1].button("Bounties"): set_page('Bounties')
-    if cols[2].button("About"): set_page('About')
-    if cols[3].button("Portfolio"): set_page('Portfolio')
+# --- TOP NAVIGATION BAR ---
+col_logo, col_nav = st.columns([1, 2])
+with col_logo:
+    st.markdown("<h2 style='color: #1e3a8a; margin:0;'>🌉 VANTAGE</h2>", unsafe_allow_html=True)
 
-st.divider()
+with col_nav:
+    n1, n2, n3, n4 = st.columns(4)
+    if n1.button("Home", key="nav_home"): navigate_to('Home')
+    if n2.button("Bounties", key="nav_bounties"): navigate_to('Bounties')
+    if n3.button("About Us", key="nav_about"): navigate_to('About')
+    if n4.button("Portfolio", key="nav_port"): navigate_to('Portfolio')
+
+st.markdown("<br>", unsafe_allow_html=True)
 
 # --- HOME PAGE ---
 if st.session_state.page == 'Home':
     st.markdown("""
-        <div class="hero-container">
-            <h1 style='font-size: 3.5rem; margin-bottom: 10px;'>Experience is the new Resume.</h1>
-            <p style='font-size: 1.2rem; opacity: 0.9;'>Complete technical projects for real companies. Get paid. Get verified.</p>
+        <div class="hero-section">
+            <h1>Experience that speaks louder.</h1>
+            <p>Complete technical projects for top-tier companies. Earn verified proof of work that skips the resume line.</p>
         </div>
     """, unsafe_allow_html=True)
     
-    st.write("### 🚀 Start Building")
-    col1, col2, col3 = st.columns(3)
+    st.markdown("### 🚀 Browse Career Tracks")
+    st.write("Click a track to see available projects.")
     
-    with col1:
-        st.markdown("""<div class="card"><h3>💻 STEM</h3><p>Code scripts, clean data, or run QA tests for startups.</p></div>""", unsafe_allow_html=True)
-        if st.button("Explore Tech", key="btn_stem"): set_page('Bounties')
-        
-    with col2:
-        st.markdown("""<div class="card"><h3>📈 Marketing</h3><p>Design SEO audits, social kits, and growth strategies.</p></div>""", unsafe_allow_html=True)
-        if st.button("Explore Creative", key="btn_mkt"): set_page('Bounties')
-        
-    with col3:
-        st.markdown("""<div class="card"><h3>📊 Business</h3><p>Competitive research, lead generation, and pitch decks.</p></div>""", unsafe_allow_html=True)
-        if st.button("Explore Biz", key="btn_biz"): set_page('Bounties')
+    c1, c2, c3 = st.columns(3)
+    
+    with c1:
+        st.markdown("""<div class="category-card">
+            <h3>💻 STEM</h3>
+            <p style='color: #64748b;'>Python scripts, data automation, and software QA for emerging startups.</p>
+        </div>""", unsafe_allow_html=True)
+        if st.button("Explore Tech", key="go_stem"): navigate_to('Bounties')
 
-# --- BOUNTIES PAGE ---
-elif st.session_state.page == 'Bounties':
-    st.header("🎯 Active Bounties")
-    st.write("Pick a project and start forging your career.")
-    
-    tab1, tab2, tab3 = st.tabs(["All Bounties", "Drafts", "Completed"])
-    
-    with tab1:
-        # Example Bounty 1
-        with st.container():
-            c1, c2, c3 = st.columns([0.5, 3, 1])
-            c1.markdown("## 🍪") # Icon for company
-            with c2:
-                st.markdown("#### Competitor SEO Keyword Map")
-                st.caption("Company: SmartBites | Major: Marketing/English")
-            with c3:
-                st.markdown("### $120")
-                if st.button("View Brief", key="b1"): st.info("Briefing details would expand here...")
-            st.divider()
+    with c2:
+        st.markdown("""<div class="category-card">
+            <h3>📈 Marketing</h3>
+            <p style='color: #64748b;'>SEO keyword audits, growth hacking strategies, and content delivery.</p>
+        </div>""", unsafe_allow_html=True)
+        if st.button("Explore Marketing", key="go_mkt"): navigate_to('Bounties')
+
+    with c3:
+        st.markdown("""<div class="category-card">
+            <h3>📊 Business</h3>
+            <p style='color: #64748b;'>Market research, competitor analysis, and lead generation spreadsheets.</p>
+        </div>""", unsafe_allow_html=True)
+        if st.button("Explore Business", key="go_biz"): navigate_to('Bounties')
 
 # --- ABOUT PAGE ---
 elif st.session_state.page == 'About':
-    st.header("About Vantage")
-    col_a, col_b = st.columns(2)
-    with col_a:
-        st.write("""
-        ### Our Mission
-        We believe that where you come from shouldn't dictate where you go. 
-        Vantage was built to bridge the "Experience Gap" for students—especially 
-        those in underrepresented communities who don't have a network in tech.
+    st.title("Our Mission")
+    st.markdown("---")
+    
+    col_img, col_txt = st.columns([1, 1.2])
+    with col_img:
+        # High quality image scaled to fit correctly
+        st.image("https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=800", use_column_width=True)
+    
+    with col_txt:
+        st.markdown("""
+        ### Bridging the Experience Gap
+        In today's market, you need experience to get a job, but you need a job to get experience. We fixed that.
         
-        ### How it works
-        1. **Companies** post specific, technical tasks they need done.
-        2. **Students** complete the tasks as part of a competition.
-        3. **Winners** get paid; **Everyone** gets a verified proof-of-work entry for their resume.
+        Vantage is built for the **next generation of talent**—the students from non-target schools and underrepresented communities who have the skills but lack the connections.
+        
+        ### How it Works
+        1. **The Brief:** Companies post technical 'Bounties.'
+        2. **The Work:** You complete the task using our professional templates.
+        3. **The Proof:** Your work is verified and added to your permanent Vantage Portfolio.
         """)
-    with col_b:
-        st.image("https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=1000", use_column_width=True)
 
 # --- PORTFOLIO PAGE ---
 elif st.session_state.page == 'Portfolio':
-    st.header("👤 Student Portfolio")
-    st.write("This is your public-facing 'Proof of Work' page.")
+    st.title("Your Proof of Work")
+    st.write("This is your verified student profile.")
     
-    col_p1, col_p2 = st.columns([1, 2])
-    with col_p1:
-        st.image("https://cdn-icons-png.flaticon.com/512/3135/3135715.png", width=150)
-        st.subheader("Alex Rivera")
-        st.caption("East Bay, California")
-        st.write("🏆 **Vantage Rank:** Top 10%")
+    p_col1, p_col2 = st.columns([1, 2])
+    with p_col1:
+        st.markdown("""<div style='background:#f8fafc; padding:30px; border-radius:20px; border:1px solid #e2e8f0; text-align:center;'>
+            <img src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png' width='120'>
+            <h2 style='margin-bottom:0;'>Alex Rivera</h2>
+            <p style='color:#64748b;'>Oakland, CA</p>
+            <hr>
+            <p><strong>Rank:</strong> Top 10%</p>
+        </div>""", unsafe_allow_html=True)
+        
+    with p_col2:
+        st.subheader("✅ Verified Projects")
+        st.info("**SEO Keyword Audit** - SmartBites Bakery (Oct 2024)")
+        st.info("**Lead Generation Spreadsheet** - TechFlow AI (Sept 2024)")
+        st.markdown("<div style='height:40px;'></div>", unsafe_allow_html=True)
+        st.button("Export Shareable Resume Link")
+
+# --- BOUNTIES PAGE ---
+elif st.session_state.page == 'Bounties':
+    st.title("🎯 Active Bounties")
+    st.write("Filter by skill and pick a project.")
     
-    with col_p2:
-        st.markdown("#### ✅ Verified Projects")
-        st.info("**Lead Gen Spreadsheet** - *TechStream AI* (Verified Oct 2024)")
-        st.info("**SEO Keyword Audit** - *Main St. Bakery* (Verified Sept 2024)")
-        st.button("Export Verified Resume")
+    st.text_input("🔍 Search skills (e.g. Python, SEO, Excel)")
+    
+    # Mock Bounty Item
+    st.markdown("""<div style='background: white; padding:25px; border-radius:15px; border-left: 6px solid #1e3a8a; box-shadow: 0 2px 4px rgba(0,0,0,0.05);'>
+        <div style='display:flex; justify-content:space-between;'>
+            <h4 style='margin:0;'>Technical Lead List Generation</h4>
+            <h4 style='margin:0; color:#166534;'>$120</h4>
+        </div>
+        <p style='color:#64748b; margin: 10px 0;'>Major: Business/STEM | Time: 5 Hours</p>
+    </div>""", unsafe_allow_html=True)
+    if st.button("Claim Bounty"):
+        st.success("Brief sent to your email!")
