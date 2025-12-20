@@ -3,20 +3,20 @@ import streamlit as st
 # --- PAGE CONFIG ---
 st.set_page_config(page_title="Vantage | Forge Your Future", page_icon="🌉", layout="wide")
 
-# --- CLEAN WHITE & HIGH CONTRAST CSS ---
+# --- HIGH-VISIBILITY CUSTOM CSS ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
     
-    /* 1. GLOBAL RESET TO WHITE BACKGROUND */
+    /* 1. FORCE WHITE BACKGROUND EVERYWHERE */
     .stApp {
         background-color: #ffffff !important;
     }
 
-    /* 2. UNIVERSAL TEXT VISIBILITY (High Contrast) */
-    html, body, [class*="st-"], .stMarkdown {
+    /* 2. UNIVERSAL DARK TEXT (No more invisible text) */
+    html, body, [class*="st-"], .stMarkdown, p, div {
         font-family: 'Inter', sans-serif;
-        color: #0f172a !important; /* Extremely dark navy for crisp reading */
+        color: #000000 !important; /* Pure Black for maximum visibility */
     }
 
     /* Remove Streamlit default header/footer */
@@ -24,82 +24,71 @@ st.markdown("""
     footer {visibility: hidden;}
     header {visibility: hidden;}
 
-    /* 3. MINIMALIST WHITE HERO SECTION */
+    /* 3. NAVIGATION BUTTONS (The "Messed Up" Part) */
+    /* We are forcing these to have a border and dark text so they are visible */
+    .stButton > button {
+        border: 2px solid #000000 !important; /* Thick black border */
+        background-color: #ffffff !important; /* White background */
+        color: #000000 !important; /* Black text */
+        border-radius: 8px !important;
+        font-weight: 700 !important;
+        font-size: 16px !important;
+        transition: 0.3s;
+        width: 100% !important;
+    }
+
+    /* Hover effect for Navigation and Action buttons */
+    .stButton > button:hover {
+        background-color: #000000 !important; /* Black background on hover */
+        color: #ffffff !important; /* White text on hover */
+    }
+
+    /* 4. HERO SECTION */
     .hero-container {
-        padding: 80px 20px;
+        padding: 60px 20px;
         text-align: center;
         background-color: #ffffff;
-        border-bottom: 1px solid #f1f5f9;
+        border: 2px solid #f1f5f9;
+        border-radius: 20px;
         margin-bottom: 40px;
     }
     
     .hero-container h1 {
-        color: #0f172a !important;
-        font-size: 4rem !important;
+        color: #000000 !important;
+        font-size: 3.5rem !important;
         font-weight: 800 !important;
-        letter-spacing: -0.03em;
-        line-height: 1.1;
-        margin-bottom: 25px !important;
+        margin-bottom: 20px !important;
     }
     
     .hero-container p {
-        color: #475569 !important; /* Slate Grey for subtext */
-        font-size: 1.4rem !important;
+        color: #334155 !important;
+        font-size: 1.3rem !important;
         max-width: 800px;
         margin: 0 auto !important;
-        line-height: 1.6;
     }
 
-    /* 4. PROFESSIONAL CARDS */
+    /* 5. CATEGORY CARDS */
     .category-card {
         background: #ffffff;
-        padding: 40px;
+        padding: 30px;
         border-radius: 20px;
-        border: 1px solid #e2e8f0;
-        transition: all 0.3s ease;
-        height: 100%;
+        border: 2px solid #e2e8f0;
         text-align: left;
-    }
-    
-    .category-card:hover {
-        border-color: #1e3a8a;
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
-        transform: translateY(-5px);
+        margin-bottom: 10px;
     }
 
     .category-card h3 {
-        color: #1e3a8a !important; /* Navy for headers */
-        font-weight: 700 !important;
-        margin-top: 15px !important;
+        color: #1e3a8a !important; /* Navy for sub-headers */
+        font-weight: 800 !important;
     }
 
-    .category-card p {
-        color: #334155 !important; /* Dark slate for card text */
-    }
-
-    /* 5. PRIMARY BUTTONS (Dark Navy with White Text) */
-    .stButton > button {
-        background-color: #0f172a !important;
-        color: #ffffff !important; /* Pure white text on dark button */
-        border: none !important;
-        border-radius: 10px !important;
-        padding: 12px 24px !important;
-        font-weight: 600 !important;
-        width: 100%;
-        transition: 0.2s;
-    }
-    
-    .stButton > button:hover {
-        background-color: #3b82f6 !important;
-        color: #ffffff !important;
-    }
-
-    /* 6. NAV BUTTONS (Clean text links) */
-    .nav-btn > div > button {
-        background: none !important;
-        color: #0f172a !important;
-        border: none !important;
-        font-weight: 600 !important;
+    /* 6. BOUNTY ITEM */
+    .bounty-box {
+        background: #f8fafc;
+        padding: 25px;
+        border-radius: 15px;
+        border: 2px solid #000000;
+        margin-top: 20px;
     }
 
     </style>
@@ -113,59 +102,63 @@ def navigate(page_name):
     st.session_state.page = page_name
 
 # --- TOP NAVIGATION BAR ---
-col_logo, col_nav = st.columns([1, 2])
+# Using a cleaner layout for the Nav
+col_logo, col_n1, col_n2, col_n3, col_n4 = st.columns([2, 1, 1, 1, 1])
+
 with col_logo:
-    st.markdown("<h2 style='color: #0f172a; margin:0; font-weight:800; letter-spacing:-1px;'>🌉 VANTAGE</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='color: #000000; margin:0; font-weight:900;'>🌉 VANTAGE</h2>", unsafe_allow_html=True)
 
-with col_nav:
-    n1, n2, n3, n4 = st.columns(4)
-    if n1.button("Home", key="n1"): navigate('Home')
-    if n2.button("Bounties", key="n2"): navigate('Bounties')
-    if n3.button("Mission", key="n3"): navigate('About')
-    if n4.button("Portfolio", key="n4"): navigate('Portfolio')
+with col_n1:
+    if st.button("HOME", key="nav_h"): navigate('Home')
+with col_n2:
+    if st.button("BOUNTIES", key="nav_b"): navigate('Bounties')
+with col_n3:
+    if st.button("MISSION", key="nav_m"): navigate('About')
+with col_n4:
+    if st.button("PORTFOLIO", key="nav_p"): navigate('Portfolio')
 
-st.markdown("<hr style='margin:0; border: 0.1px solid #f1f5f9;'>", unsafe_allow_html=True)
+st.markdown("<hr>", unsafe_allow_html=True)
 
 # --- HOME PAGE ---
 if st.session_state.page == 'Home':
     st.markdown("""
         <div class="hero-container">
-            <h1>Experience is the <br>New Credential.</h1>
-            <p>Complete professional technical tasks for growing startups. Build a verified portfolio that bypasses the traditional resume screen.</p>
+            <h1>Experience > Pedigree.</h1>
+            <p>Work on real technical tasks for startups. Get paid. Build a verified portfolio that opens doors.</p>
         </div>
     """, unsafe_allow_html=True)
     
-    st.markdown("<h3 style='text-align:center; margin-bottom:40px; color:#0f172a;'>Choose Your Career Track</h3>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align:center; margin-bottom:30px;'>Select Your Track</h2>", unsafe_allow_html=True)
     
     c1, c2, c3 = st.columns(3)
     
     with c1:
         st.markdown("""<div class="category-card">
-            <span style='font-size:35px;'>💻</span>
+            <h1 style='margin:0;'>💻</h1>
             <h3>STEM & Data</h3>
-            <p>Build automation scripts, clean data, and perform QA testing for scaling AI startups.</p>
+            <p>Code automation, clean data, and QA test for AI startups.</p>
         </div>""", unsafe_allow_html=True)
-        st.button("Explore Tech", key="b_s")
+        if st.button("VIEW TECH", key="btn_s"): navigate('Bounties')
 
     with c2:
         st.markdown("""<div class="category-card">
-            <span style='font-size:35px;'>📈</span>
+            <h1 style='margin:0;'>📈</h1>
             <h3>Marketing</h3>
-            <p>Develop SEO keyword maps, social kit audits, and growth funnels for real-world brands.</p>
+            <p>SEO audits, social strategy, and growth funnels.</p>
         </div>""", unsafe_allow_html=True)
-        st.button("Explore Growth", key="b_m")
+        if st.button("VIEW GROWTH", key="btn_m"): navigate('Bounties')
 
     with c3:
         st.markdown("""<div class="category-card">
-            <span style='font-size:35px;'>📊</span>
-            <h3>Business Ops</h3>
-            <p>Conduct market research, competitor analysis, and lead generation for high-stakes teams.</p>
+            <h1 style='margin:0;'>📊</h1>
+            <h3>Business</h3>
+            <p>Market research, lead gen, and competitor analysis.</p>
         </div>""", unsafe_allow_html=True)
-        st.button("Explore Business", key="b_b")
+        if st.button("VIEW BIZ", key="btn_b"): navigate('Bounties')
 
 # --- MISSION PAGE ---
 elif st.session_state.page == 'About':
-    st.markdown("<h1 style='margin-top:40px; text-align:center;'>Our Mission</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align:center;'>Our Mission</h1>", unsafe_allow_html=True)
     
     col_img, col_txt = st.columns([1, 1], gap="large")
     with col_img:
@@ -173,60 +166,57 @@ elif st.session_state.page == 'About':
     
     with col_txt:
         st.markdown("""
-        <h2 style='color:#0f172a;'>Solving the "Experience Catch-22"</h2>
-        <p style='font-size:1.1rem;'>You need experience to get a job, but you need a job to get experience. We’re here to break that cycle.</p>
-        <p style='font-size:1.1rem;'>Vantage connects students—particularly those from underrepresented backgrounds—with 'Micro-Bounties'. These are real technical tasks that startups need help with today.</p>
-        <hr style='border: 0.1px solid #e2e8f0;'>
-        <h4 style='color:#1e3a8a;'>The Result</h4>
-        <p>Every completed project earns you a <b>'Verified Proof of Work'</b>—a permanent digital credential that proves your skill to any employer, anywhere.</p>
+        <h2>Democratizing Opportunity</h2>
+        <p style='font-size:1.2rem;'>Vantage was built to solve the 'Experience Gap.' We connect students from all backgrounds with micro-tasks from real companies.</p>
+        <p style='font-size:1.2rem;'>Instead of an unpaid internship you can't afford, we offer 'Bounties'—short, technical projects that pay cash and build your resume.</p>
         """, unsafe_allow_html=True)
 
 # --- PORTFOLIO PAGE ---
 elif st.session_state.page == 'Portfolio':
-    st.markdown("<h1 style='margin-top:40px; text-align:center;'>Student Portfolio</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align:center;'>Student Portfolio</h1>", unsafe_allow_html=True)
     
     p_col1, p_col2 = st.columns([1, 2], gap="large")
     with p_col1:
-        st.markdown("""<div style='background:#f8fafc; padding:40px; border-radius:24px; border:1px solid #e2e8f0; text-align:center;'>
-            <img src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png' width='130'>
-            <h2 style='margin-top:20px; color:#0f172a;'>Alex Rivera</h2>
-            <p style='color:#64748b;'>Oakland, CA | Student</p>
-            <div style='background:#ffffff; border:1px solid #cbd5e1; padding:15px; border-radius:12px; margin:20px 0;'>
-                <p style='margin:0; font-weight:700; color:#1e3a8a;'>Vantage Rank: Top 10%</p>
+        st.markdown("""<div style='background:#f8fafc; padding:30px; border-radius:24px; border:2px solid #000000; text-align:center;'>
+            <img src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png' width='120'>
+            <h2 style='margin-top:20px;'>Alex Rivera</h2>
+            <p>Oakland, CA | Student</p>
+            <div style='background:#000000; color:white; padding:10px; border-radius:10px; margin:20px 0;'>
+                <p style='margin:0; font-weight:700; color:white !important;'>RANK: TOP 10%</p>
             </div>
         </div>""", unsafe_allow_html=True)
-        st.button("Copy Public Profile Link", key="copy_link")
+        st.button("SHARE PROFILE", key="share_btn")
         
     with p_col2:
-        st.subheader("✅ Verified Projects")
+        st.subheader("✅ Verified Proof of Work")
         st.markdown("""
-            <div style='background:white; padding:25px; border-radius:16px; border:1px solid #e2e8f0; margin-bottom:15px;'>
-                <h4 style='margin:0; color:#0f172a;'>Python Automation Script</h4>
-                <p style='color:#475569; margin:5px 0;'>Employer: TechFlow AI • Verified Oct 2024</p>
+            <div style='background:white; padding:20px; border-radius:15px; border:2px solid #e2e8f0; margin-bottom:15px;'>
+                <h4 style='margin:0;'>Python Automation Script</h4>
+                <p style='margin:5px 0;'>Employer: TechFlow AI • Verified 2024</p>
             </div>
-            <div style='background:white; padding:25px; border-radius:16px; border:1px solid #e2e8f0; margin-bottom:15px;'>
-                <h4 style='margin:0; color:#0f172a;'>SEO Content Strategy Audit</h4>
-                <p style='color:#475569; margin:5px 0;'>Employer: SmartBites Bakery • Verified Sept 2024</p>
+            <div style='background:white; padding:20px; border-radius:15px; border:2px solid #e2e8f0; margin-bottom:15px;'>
+                <h4 style='margin:0;'>SEO Content Audit</h4>
+                <p style='margin:5px 0;'>Employer: SmartBites Bakery • Verified 2024</p>
             </div>
         """, unsafe_allow_html=True)
 
 # --- BOUNTIES PAGE ---
 elif st.session_state.page == 'Bounties':
-    st.markdown("<h1 style='margin-top:40px;'>Active Bounties</h1>", unsafe_allow_html=True)
+    st.markdown("<h1>Active Bounties</h1>", unsafe_allow_html=True)
     st.text_input("🔍 Search skills or companies...")
     
     st.markdown("""
-        <div style='background: #f8fafc; padding:30px; border-radius:20px; border:1px solid #e2e8f0; border-left: 8px solid #0f172a; margin-top:25px;'>
+        <div class="bounty-box">
             <div style='display:flex; justify-content:space-between; align-items:center;'>
                 <div>
-                    <h3 style='margin:0; color:#0f172a;'>Technical Lead List Generation</h3>
-                    <p style='color:#475569; margin-top:5px; font-size:1.1rem;'>Track: Business Ops | Est. Time: 5 Hours</p>
+                    <h3 style='margin:0;'>Technical Lead List Generation</h3>
+                    <p style='margin-top:5px;'>Track: Business Ops | Est. Time: 5 Hours</p>
                 </div>
                 <div style='text-align:right;'>
-                    <h2 style='margin:0; color:#15803d;'>$120</h2>
-                    <p style='color:#64748b; margin:0;'>Reward</p>
+                    <h2 style='margin:0; color:#15803d !important;'>$120</h2>
+                    <p style='margin:0;'>Reward</p>
                 </div>
             </div>
         </div>
     """, unsafe_allow_html=True)
-    st.button("Claim Bounty Brief", key="b1_claim")
+    st.button("CLAIM BOUNTY BRIEF", key="claim_1")
