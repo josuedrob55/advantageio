@@ -1,7 +1,7 @@
 import streamlit as st
 
 # --- PAGE CONFIG ---
-st.set_page_config(page_title="Vantage | Forge Your Future", page_icon="🌉", layout="wide")
+st.set_page_config(page_title="InstaBoost | Forge Your Future", page_icon="🌉", layout="wide")
 
 # --- HIGH-VISIBILITY CUSTOM CSS ---
 st.markdown("""
@@ -106,7 +106,7 @@ def navigate(page_name):
 col_logo, col_n1, col_n2, col_n3, col_n4 = st.columns([2, 1, 1, 1, 1])
 
 with col_logo:
-    st.markdown("<h2 style='color: #000000; margin:0; font-weight:900;'>🌉 VANTAGE</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='color: #000000; margin:0; font-weight:900;'>🌉 INSTABOOST</h2>", unsafe_allow_html=True)
 
 with col_n1:
     if st.button("HOME", key="nav_h"): navigate('Home')
@@ -167,7 +167,7 @@ elif st.session_state.page == 'About':
     with col_txt:
         st.markdown("""
         <h2>Democratizing Opportunity</h2>
-        <p style='font-size:1.2rem;'>Vantage was built to solve the 'Experience Gap.' We connect students from all backgrounds with micro-tasks from real companies.</p>
+        <p style='font-size:1.2rem;'>InstaBoost was built to solve the 'Experience Gap.' We connect students from all backgrounds with micro-tasks from real companies.</p>
         <p style='font-size:1.2rem;'>Instead of an unpaid internship you can't afford, we offer 'Bounties'—short, technical projects that pay cash and build your resume.</p>
         """, unsafe_allow_html=True)
 
