@@ -216,7 +216,7 @@ elif st.session_state.page == 'About':
 
 # --- PORTFOLIO PAGE ---
 elif st.session_state.page == 'Portfolio':
-    st.markdown("<h1 style='text-align:center; letter-spacing: 5px;'>USER_PROFILE</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align:center; letter-spacing: 5px;'>USER PROFILE</h1>", unsafe_allow_html=True)
     p_col1, p_col2 = st.columns([1, 1.5], gap="large")
     with p_col1:
         st.markdown("""<div style='border: 1px solid #000; padding:40px; text-align:center;'>
