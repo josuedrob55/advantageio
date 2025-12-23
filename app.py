@@ -1,189 +1,169 @@
 import streamlit as st
 
 # --- SYSTEM CONFIG ---
-st.set_page_config(page_title="VANTAGE // NEURAL LINK", page_icon="🌐", layout="wide")
+st.set_page_config(page_title="VANTAGE // NEURAL LINK", page_icon="🧬", layout="wide")
 
-# --- CYBER-DECK CSS ENGINE ---
+# --- THE "ANTI-WHITE" CYBERPUNK ENGINE ---
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Space+Mono&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@300;500;700&display=swap');
     
-    /* 1. THE DEEP SPACE BACKGROUND */
-    .stApp {
+    /* 1. FORCE KILL ALL WHITE BACKGROUNDS */
+    .stApp, .main, .block-container {
         background-color: #050505 !important;
         background-image: 
-            radial-gradient(circle at 2px 2px, rgba(59, 130, 246, 0.15) 1px, transparent 0);
-        background-size: 32px 32px;
+            linear-gradient(90deg, rgba(255, 0, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+        background-size: 50px 50px;
     }
 
-    /* 2. TEXT OVERRIDES */
-    h1, h2, h3 { font-family: 'Syncopate', sans-serif !important; color: #ffffff !important; text-transform: uppercase; letter-spacing: 4px; }
-    p, span, div { font-family: 'Space Mono', monospace !important; color: #a1a1aa !important; }
-
-    /* 3. GLASS-MORPHIC PANELS */
-    .cyber-panel {
-        background: rgba(20, 20, 25, 0.8);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(12px);
-        padding: 40px;
-        border-radius: 2px;
-        position: relative;
-        overflow: hidden;
-        transition: 0.5s ease;
-    }
-    .cyber-panel:hover {
-        border-color: #3b82f6;
-        box-shadow: 0 0 40px rgba(59, 130, 246, 0.2);
-        transform: translateY(-5px);
-    }
-    .cyber-panel::before {
-        content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: #3b82f6;
-    }
-
-    /* 4. NEON GLOW BUTTONS */
-    .stButton > button {
-        background: transparent !important;
-        color: #3b82f6 !important;
-        border: 1px solid #3b82f6 !important;
-        border-radius: 0px !important;
-        font-family: 'Syncopate' !important;
-        font-size: 10px !important;
-        letter-spacing: 3px !important;
-        padding: 15px 30px !important;
-        transition: 0.4s !important;
+    /* 2. TEXT COLOR OVERRIDES */
+    h1, h2, h3 { 
+        font-family: 'Orbitron', sans-serif !important; 
+        color: #00ffff !important; /* Cyan Neon */
+        text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
         text-transform: uppercase;
+        letter-spacing: 5px;
+    }
+    
+    p, span, div, label { 
+        font-family: 'Rajdhani', sans-serif !important; 
+        color: #e2e8f0 !important; /* Silver text */
+        font-weight: 500 !important;
+        font-size: 18px !important;
+    }
+
+    /* 3. NEON GLASS PANELS */
+    .cyber-card {
+        background: rgba(15, 15, 20, 0.9) !important;
+        border: 2px solid #ff00ff !important; /* Pink Neon Border */
+        padding: 30px;
+        border-radius: 0px 20px 0px 20px;
+        box-shadow: 0 0 15px rgba(255, 0, 255, 0.2);
+        transition: 0.4s;
+        margin-bottom: 20px;
+    }
+    .cyber-card:hover {
+        box-shadow: 0 0 30px rgba(255, 0, 255, 0.6);
+        transform: scale(1.02);
+        background: rgba(20, 20, 30, 1) !important;
+    }
+
+    /* 4. GLITCH BUTTONS */
+    .stButton > button {
+        width: 100% !important;
+        background: transparent !important;
+        color: #00ffff !important;
+        border: 2px solid #00ffff !important;
+        font-family: 'Orbitron' !important;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        padding: 15px !important;
+        position: relative;
+        transition: 0.3s;
     }
     .stButton > button:hover {
-        background: #3b82f6 !important;
-        color: #ffffff !important;
-        box-shadow: 0 0 30px #3b82f6;
+        background: #00ffff !important;
+        color: #000000 !important;
+        box-shadow: 0 0 20px #00ffff;
     }
 
-    /* 5. LIQUID NEON BAR */
-    .liquid-bar {
-        height: 2px;
-        background: linear-gradient(90deg, transparent, #3b82f6, #8b5cf6, transparent);
-        margin: 20px 0;
+    /* 5. SIDEBAR OVERRIDE */
+    [data-testid="stSidebar"] {
+        background-color: #000000 !important;
+        border-right: 2px solid #00ffff;
     }
 
-    /* 6. HIDE NAV ELEMENTS */
+    /* HIDE DEFAULTS */
     header, footer, #MainMenu { visibility: hidden; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- NAVIGATION CONTROLLER ---
-if 'page' not in st.session_state: st.session_state.page = 'HOME'
+# --- NAV LOGIC ---
+if 'page' not in st.session_state: st.session_state.page = 'TERMINAL'
 
-# CUSTOM SIDEBAR HUD
 with st.sidebar:
     st.markdown("<h1>VANTAGE</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='font-size: 10px;'>PROTOCOL VERSION: 8.4.2</p>", unsafe_allow_html=True)
-    st.markdown("<div class='liquid-bar'></div>", unsafe_allow_html=True)
-    
-    if st.button(">> 01_DASHBOARD"): st.session_state.page = 'HOME'
-    if st.button(">> 02_LIVE_BOUNTIES"): st.session_state.page = 'BOUNTIES'
-    if st.button(">> 03_MISSION_LOG"): st.session_state.page = 'MISSION'
-    if st.button(">> 04_IDENTITY_NODE"): st.session_state.page = 'USER'
-    
-    st.markdown("<div style='margin-top: 100%;'></div>", unsafe_allow_html=True)
-    st.markdown("<p style='font-size: 9px; opacity: 0.4;'>SECURE CONNECTION ESTABLISHED</p>", unsafe_allow_html=True)
+    st.markdown("<p style='color:#ff00ff !important;'>>> SYSTEM STATUS: OVERRIDE</p>", unsafe_allow_html=True)
+    st.divider()
+    if st.button(">> 01_TERMINAL"): st.session_state.page = 'TERMINAL'
+    if st.button(">> 02_BOUNTIES"): st.session_state.page = 'BOUNTIES'
+    if st.button(">> 03_ARCHIVE"): st.session_state.page = 'MISSION'
+    if st.button(">> 04_IDENTITY"): st.session_state.page = 'USER'
 
-# --- HOME INTERFACE ---
-if st.session_state.page == 'HOME':
-    st.markdown("<p style='color: #3b82f6;'>[ SYSTEM_STATUS: READY ]</p>", unsafe_allow_html=True)
-    
-    # Large Title
+# --- PAGE: TERMINAL (HOME) ---
+if st.session_state.page == 'TERMINAL':
     st.markdown("""
-        <div style='padding: 60px 0;'>
-            <h1 style='font-size: 5rem; line-height: 1;'>THE FUTURE<br><span style='color: #3b82f6;'>OF WORK</span></h1>
-            <p style='margin-top: 20px; font-size: 1.2rem; letter-spacing: 2px;'>BREAK THE RECURSIVE EXPERIENCE LOOP.</p>
+        <div style='text-align: center; padding: 50px 0;'>
+            <h1 style='font-size: 5rem; color: #ff00ff !important; text-shadow: 0 0 20px #ff00ff;'>VANTAGE</h1>
+            <h2 style='font-size: 1.5rem;'>The Experience Protocol</h2>
+            <p style='color: #00ffff !important;'>[ STATUS: ACCESS GRANTED ]</p>
         </div>
     """, unsafe_allow_html=True)
 
-    # Content Grid
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        st.markdown("""<div class='cyber-panel'>
-            <h3 style='color: #3b82f6;'>CORE_01</h3>
-            <h2 style='font-size: 1.2rem;'>STEM / DATA</h2>
-            <p style='font-size: 0.8rem; margin-top: 10px;'>Algorithmic testing, Python automation, and data sanitization for AI nodes.</p>
+        st.markdown("""<div class='cyber-card'>
+            <h3>CORE_STEM</h3>
+            <p>PYTHON // AUTOMATION // DATA</p>
+            <p style='font-size: 14px !important; opacity: 0.7;'>Execute code bounties for high-growth AI nodes.</p>
         </div>""", unsafe_allow_html=True)
-        st.button("INITIALIZE SCTR_01", key="btn1")
+        st.button("INITIALIZE_STEM", key="b1")
 
     with col2:
-        st.markdown("""<div class='cyber-panel'>
-            <h3 style='color: #8b5cf6;'>CORE_02</h3>
-            <h2 style='font-size: 1.2rem;'>GROWTH</h2>
-            <p style='font-size: 0.8rem; margin-top: 10px;'>SEO architectural mapping, brand logic, and social engineering loops.</p>
+        st.markdown("""<div class='cyber-card' style='border-color: #00ffff !important; box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);'>
+            <h3 style='color: #ff00ff !important;'>CORE_GROWTH</h3>
+            <p>SEO // STRATEGY // BRAND</p>
+            <p style='font-size: 14px !important; opacity: 0.7;'>Optimize brand architecture for market dominance.</p>
         </div>""", unsafe_allow_html=True)
-        st.button("INITIALIZE SCTR_02", key="btn2")
+        st.button("INITIALIZE_GROWTH", key="b2")
 
     with col3:
-        st.markdown("""<div class='cyber-panel'>
-            <h3 style='color: #ec4899;'>CORE_03</h3>
-            <h2 style='font-size: 1.2rem;'>BIZ_INTEL</h2>
-            <p style='font-size: 0.8rem; margin-top: 10px;'>Venture research, lead-gen architecture, and market intelligence.</p>
+        st.markdown("""<div class='cyber-card'>
+            <h3>CORE_BIZ</h3>
+            <p>INTEL // RESEARCH // LEADS</p>
+            <p style='font-size: 14px !important; opacity: 0.7;'>Extract competitor intelligence and market data.</p>
         </div>""", unsafe_allow_html=True)
-        st.button("INITIALIZE SCTR_03", key="btn3")
+        st.button("INITIALIZE_BIZ", key="b3")
 
-# --- BOUNTIES INTERFACE ---
+# --- PAGE: BOUNTIES ---
 elif st.session_state.page == 'BOUNTIES':
-    st.markdown("<h1>LIVE_BOUNTIES</h1>", unsafe_allow_html=True)
-    st.text_input("QUERY DATABASE_")
+    st.markdown("<h1>LIVE_BOUNTY_STREAM</h1>", unsafe_allow_html=True)
+    st.text_input("QUERY_DATABASE_")
     
     st.markdown("""
-        <div class='cyber-panel' style='margin-top: 20px;'>
-            <div style='display: flex; justify-content: space-between; align-items: center;'>
+        <div class='cyber-card' style='border-color: #00ffff !important;'>
+            <div style='display: flex; justify-content: space-between;'>
                 <div>
-                    <h2 style='font-size: 1.5rem; margin: 0;'>DATA_CLEAN_04</h2>
-                    <p>NODE: TECH_FLOW_AI // SKILL: PYTHON</p>
+                    <h2 style='margin:0; font-size: 1.5rem;'>DATA_SCRAPE_V4</h2>
+                    <p style='color:#ff00ff !important;'>NODE: NEXUS_AI</p>
                 </div>
                 <div style='text-align: right;'>
-                    <h1 style='color: #3b82f6; font-size: 2rem; margin: 0;'>150.00</h1>
-                    <p>USDT_REWARD</p>
+                    <h1 style='color: #00ffff !important; margin:0;'>250.00</h1>
+                    <p style='font-size: 12px !important;'>REWARD_CREDITS</p>
                 </div>
             </div>
         </div>
     """, unsafe_allow_html=True)
-    st.button("CLAIM_TASK_UPLINK")
+    st.button("CONNECT_TO_BRIEF")
 
-# --- MISSION INTERFACE ---
-elif st.session_state.page == 'MISSION':
-    st.markdown("<h1>MISSION_LOG</h1>", unsafe_allow_html=True)
-    col_a, col_b = st.columns(2)
-    with col_a:
-        st.markdown("""<div style='border: 1px solid #3b82f6; padding: 10px;'>""", unsafe_allow_html=True)
-        st.image("https://images.unsplash.com/photo-1614728263952-84ea256f9679?auto=format&fit=crop&q=80&w=1000")
-        st.markdown("</div>", unsafe_allow_html=True)
-    with col_b:
-        st.markdown("""
-            <h3>PROTOCOL_VANTAGE</h3>
-            <p style='font-size: 1.1rem;'>The current economy is built on a "Proof of Network" model. If you don't know someone, you don't get in.</p>
-            <br>
-            <p style='font-size: 1.1rem; color: #ffffff;'>We are replacing this with "Proof of Skill."</p>
-            <br>
-            <p>By atomizing work into Bounties, we allow students from any background to bypass the resume screen and prove their worth through hard deliverables.</p>
-        """, unsafe_allow_html=True)
-
-# --- USER INTERFACE ---
+# --- PAGE: IDENTITY (USER) ---
 elif st.session_state.page == 'USER':
     st.markdown("<h1>IDENTITY_NODE</h1>", unsafe_allow_html=True)
     c1, c2 = st.columns([1, 2])
     with c1:
         st.markdown("""
-            <div class='cyber-panel' style='text-align: center;'>
-                <div style='width: 100px; height: 100px; background: #3b82f6; border-radius: 50%; margin: 0 auto; box-shadow: 0 0 30px #3b82f6;'></div>
+            <div class='cyber-card' style='text-align: center;'>
+                <div style='width: 120px; height: 120px; background: linear-gradient(#ff00ff, #00ffff); border-radius: 50%; margin: 0 auto; box-shadow: 0 0 20px #ff00ff;'></div>
                 <h2 style='margin-top: 20px;'>ALEX_RIVERA</h2>
-                <p>OAKLAND_CALIFORNIA</p>
-                <div style='background: #3b82f6; color: white; padding: 5px; margin-top: 15px;'>
-                    <span style='color: white !important;'>LVL: ELITE_10</span>
-                </div>
+                <p>RANK: [ ELITE_10 ]</p>
+                <p style='font-size: 12px !important;'>LOCATION: OAKLAND_GRID_04</p>
             </div>
         """, unsafe_allow_html=True)
     with c2:
-        st.markdown("<div class='cyber-panel'><h3>VERIFIED_LEDGER</h3>", unsafe_allow_html=True)
-        st.markdown("<p style='border-bottom: 1px solid rgba(255,255,255,0.1); padding: 10px 0;'>>> PYTHON_SCRPT_01 // VERIFIED_BY_STARTUP_X</p>", unsafe_allow_html=True)
-        st.markdown("<p style='border-bottom: 1px solid rgba(255,255,255,0.1); padding: 10px 0;'>>> SEO_AUDIT_V2 // VERIFIED_BY_GLOBAL_CO</p>", unsafe_allow_html=True)
+        st.markdown("<div class='cyber-card'><h3>VERIFIED_LEDGER</h3>", unsafe_allow_html=True)
+        st.markdown("<p style='color:#00ffff !important;'>>> TASK_042: PYTHON_AUTOMATION // VERIFIED</p>", unsafe_allow_html=True)
+        st.markdown("<p style='color:#00ffff !important;'>>> TASK_089: MARKET_INTEL_V1 // VERIFIED</p>", unsafe_allow_html=True)
         st.markdown("</div>", unsafe_allow_html=True)
-        st.button("GENERATE_PORTFOLIO_LINK")
+        st.button("EXPORT_IDENTITY_KEY")
