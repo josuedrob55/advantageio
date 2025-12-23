@@ -6,88 +6,68 @@ from datetime import datetime
 # CONFIG
 # =====================================================
 st.set_page_config(
-    page_title="VANTAGE // NEURAL PROTOCOL",
+    page_title="VANTAGE // PROTOCOL",
     page_icon="🧬",
     layout="wide"
 )
 
 # =====================================================
-# CYBER UI ENGINE (SAFE)
+# CYBER UI STYLES
 # =====================================================
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=JetBrains+Mono:wght@300;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Inter:wght@300;500&display=swap');
 
-html, body, .stApp {
-    background-color: #05050A;
-    color: #CBD5E1;
-    font-family: 'JetBrains Mono', monospace;
+html, body, [class*="css"] {
+    font-family: 'Inter', sans-serif;
+    background-color: #05070d;
+    color: #e6f1ff;
 }
 
-/* Subtle grid */
-.stApp {
-    background-image:
-        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-    background-size: 60px 60px;
-}
-
-/* Headings */
 h1, h2, h3 {
-    font-family: 'Orbitron', sans-serif;
-    letter-spacing: 3px;
-    color: #00F0FF;
+    font-family: 'Orbitron', monospace;
+    letter-spacing: 1px;
 }
 
-/* Sidebar */
-[data-testid="stSidebar"] {
-    background: rgba(10,10,15,0.95);
-    border-right: 1px solid #111827;
-    backdrop-filter: blur(16px);
+.glass {
+    background: rgba(15, 20, 40, 0.6);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(0, 255, 255, 0.15);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
 }
 
-/* Cards */
-.v-card {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.08);
-    padding: 22px;
-    border-radius: 14px;
-    transition: 0.3s;
-    margin-bottom: 18px;
-}
-.v-card:hover {
-    border-color: #00F0FF;
-    box-shadow: 0 0 25px rgba(0,240,255,0.25);
-    transform: translateY(-2px);
+.neon {
+    color: #00f6ff;
 }
 
-/* Tags */
-.tag {
-    font-size: 11px;
-    padding: 4px 8px;
-    border-radius: 6px;
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
     margin-right: 6px;
+    background: linear-gradient(90deg, #ff00cc, #00f6ff);
+    color: black;
 }
-.stem { background: rgba(0,240,255,0.15); color: #00F0FF; }
-.growth { background: rgba(255,0,200,0.15); color: #FF4FD8; }
-.intel { background: rgba(255,176,32,0.15); color: #FFB020; }
 
-/* Status */
-.verified { color: #22C55E; }
-.pending { color: #FACC15; }
-.rejected { color: #EF4444; }
+.xp {
+    color: #ffb347;
+    font-weight: bold;
+}
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown("<h1>VANTAGE // NEURAL PROTOCOL</h1>", unsafe_allow_html=True)
+st.markdown("<h1 class='neon'>VANTAGE // PROTOCOL</h1>", unsafe_allow_html=True)
 
 # =====================================================
-# STATE
+# STATE INIT
 # =====================================================
 if "users" not in st.session_state:
     st.session_state.users = {
-        "alex": {"role": "student", "xp": 120},
-        "genisys": {"role": "company", "xp": 0}
+        "alex": {"role": "student", "xp": 120, "level": 2},
+        "genisys": {"role": "company", "xp": 0, "level": 0}
     }
 
 if "bounties" not in st.session_state:
@@ -99,27 +79,39 @@ if "submissions" not in st.session_state:
 if "current_user" not in st.session_state:
     st.session_state.current_user = None
 
+# Normalize users (prevents ALL KeyErrors)
+for u in st.session_state.users:
+    st.session_state.users[u].setdefault("xp", 0)
+    st.session_state.users[u].setdefault("level", 1)
+    st.session_state.users[u].setdefault("role", "student")
+
 # =====================================================
 # LOGIN
 # =====================================================
 if not st.session_state.current_user:
-    st.subheader("INITIALIZE NEURAL LINK")
+    st.markdown("<div class='glass'>", unsafe_allow_html=True)
+    st.subheader("CONNECT TO VANTAGE")
+
     user = st.selectbox("IDENTITY", list(st.session_state.users.keys()))
     if st.button("CONNECT"):
         st.session_state.current_user = user
         st.rerun()
+    st.markdown("</div>", unsafe_allow_html=True)
     st.stop()
 
 user = st.session_state.current_user
 role = st.session_state.users[user]["role"]
+xp = st.session_state.users[user]["xp"]
+level = st.session_state.users[user]["level"]
 
 # =====================================================
 # SIDEBAR HUD
 # =====================================================
-st.sidebar.markdown(f"### {user.upper()}")
+st.sidebar.markdown(f"### 🧠 `{user.upper()}`")
 st.sidebar.markdown(f"ROLE: `{role.upper()}`")
-st.sidebar.markdown(f"XP: `{st.session_state.users[user]['xp']}`")
-st.sidebar.progress(min(st.session_state.users[user]['xp'] / 500, 1.0))
+st.sidebar.markdown(f"<span class='xp'>XP: {xp}</span>", unsafe_allow_html=True)
+st.sidebar.progress(min(xp % 100 / 100, 1.0))
+st.sidebar.markdown(f"LEVEL {level}")
 
 if st.sidebar.button("DISCONNECT"):
     st.session_state.current_user = None
@@ -127,76 +119,82 @@ if st.sidebar.button("DISCONNECT"):
 
 page = st.sidebar.radio(
     "NAV",
-    ["Command Center", "Bounty Terminal", "Submit Work", "Validation Queue", "Neural Identity"]
+    ["Command Center", "Bounty Terminal", "Submit Proof", "Validate", "Neural Identity"]
 )
 
 # =====================================================
 # COMMAND CENTER
 # =====================================================
 if page == "Command Center":
+    st.markdown("<div class='glass'>", unsafe_allow_html=True)
     st.subheader("SYSTEM STATUS")
 
-    c1, c2, c3 = st.columns(3)
-    c1.metric("ACTIVE BOUNTIES", len(st.session_state.bounties))
-    c2.metric("VERIFIED WORK", len([s for s in st.session_state.submissions if s["status"] == "VERIFIED"]))
-    c3.metric("NETWORK LATENCY", "14ms")
+    st.metric("ACTIVE BOUNTIES", len(st.session_state.bounties))
+    st.metric(
+        "VERIFIED PROOFS",
+        len([s for s in st.session_state.submissions if s["status"] == "VERIFIED"])
+    )
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # =====================================================
 # BOUNTY TERMINAL
 # =====================================================
 elif page == "Bounty Terminal":
-    st.subheader("AVAILABLE MICRO-BOUNTIES")
+    st.subheader("BOUNTY TERMINAL")
 
     if role == "company":
-        with st.form("deploy"):
-            st.markdown("### DEPLOY BOUNTY")
-            title = st.text_input("TASK")
-            domain = st.selectbox("DOMAIN", ["STEM", "GROWTH", "INTEL"])
-            reward = st.number_input("REWARD (CR)", min_value=50)
+        with st.form("new_bounty"):
+            st.markdown("<div class='glass'>", unsafe_allow_html=True)
+            title = st.text_input("TASK NAME")
+            reward = st.number_input("XP REWARD", 50, 500, 100)
+            skills = st.text_input("SKILLS (comma separated)")
+            hours = st.selectbox("TIME", ["4–6h", "6–8h", "8–10h"])
             if st.form_submit_button("DEPLOY"):
                 st.session_state.bounties.append({
                     "id": str(uuid.uuid4())[:8],
                     "title": title,
-                    "domain": domain,
                     "reward": reward,
+                    "skills": skills,
+                    "hours": hours,
                     "company": user,
                     "claimed_by": None
                 })
+                st.success("BOUNTY DEPLOYED")
+            st.markdown("</div>", unsafe_allow_html=True)
 
     for b in st.session_state.bounties:
-        domain_class = b["domain"].lower()
-        st.markdown(f"""
-        <div class="v-card">
-            <h3>{b['title']}</h3>
-            <span class="tag {domain_class}">{b['domain']}</span>
-            <p>REWARD: {b['reward']} CR</p>
-            <p>COMPANY: {b['company']}</p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("<div class='glass'>", unsafe_allow_html=True)
+        st.markdown(f"### {b['title']}")
+        st.markdown(f"XP: `{b['reward']}` | TIME: `{b['hours']}`")
+        st.markdown(f"SKILLS: {b['skills']}")
+        st.markdown(f"COMPANY: `{b['company']}`")
 
         if role == "student" and not b["claimed_by"]:
-            if st.button(f"CLAIM {b['id']}"):
+            if st.button(f"CLAIM {b['id']}", key=b["id"]):
                 b["claimed_by"] = user
-                st.session_state.users[user]["xp"] += 10
+                st.success("BOUNTY CLAIMED")
+        st.markdown("</div>", unsafe_allow_html=True)
 
 # =====================================================
-# SUBMIT WORK
+# SUBMIT PROOF
 # =====================================================
-elif page == "Submit Work":
+elif page == "Submit Proof":
     if role != "student":
-        st.warning("STUDENT ACCESS ONLY")
+        st.warning("STUDENT ONLY")
         st.stop()
 
     claimed = [b for b in st.session_state.bounties if b["claimed_by"] == user]
+
     if not claimed:
-        st.info("NO ACTIVE BOUNTIES")
+        st.info("NO CLAIMED BOUNTIES")
         st.stop()
 
-    bounty = st.selectbox("SELECT TASK", claimed, format_func=lambda x: x["title"])
+    bounty = st.selectbox("SELECT BOUNTY", claimed, format_func=lambda x: x["title"])
 
     with st.form("submit"):
+        st.markdown("<div class='glass'>", unsafe_allow_html=True)
         link = st.text_input("DELIVERABLE LINK")
-        process = st.text_area("PROCESS LOG")
+        process = st.text_area("PROCESS LOG (MIN 50 CHARS)")
         if st.form_submit_button("TRANSMIT"):
             if len(process) < 50:
                 st.error("PROCESS LOG TOO SHORT")
@@ -205,44 +203,65 @@ elif page == "Submit Work":
                     "id": bounty["id"],
                     "student": user,
                     "company": bounty["company"],
-                    "status": "PENDING"
+                    "reward": bounty["reward"],
+                    "link": link,
+                    "process": process,
+                    "status": "PENDING",
+                    "timestamp": datetime.utcnow()
                 })
-                st.session_state.users[user]["xp"] += 50
+                st.success("SUBMISSION SENT")
+        st.markdown("</div>", unsafe_allow_html=True)
 
 # =====================================================
-# VALIDATION
+# VALIDATE
 # =====================================================
-elif page == "Validation Queue":
+elif page == "Validate":
     if role != "company":
-        st.warning("COMPANY ACCESS ONLY")
+        st.warning("COMPANY ONLY")
         st.stop()
 
     for s in st.session_state.submissions:
-        if s["company"] == user:
-            status_class = s["status"].lower()
-            st.markdown(f"""
-            <div class="v-card">
-                <p>TASK: {s['id']}</p>
-                <p>STUDENT: {s['student']}</p>
-                <p class="{status_class}">STATUS: {s['status']}</p>
-            </div>
-            """, unsafe_allow_html=True)
+        if s["company"] != user:
+            continue
 
-            if s["status"] == "PENDING":
-                if st.button(f"VERIFY {s['id']}"):
-                    s["status"] = "VERIFIED"
-                    st.session_state.users[s["student"]]["xp"] += 100
+        st.markdown("<div class='glass'>", unsafe_allow_html=True)
+        st.markdown(f"### TASK `{s['id']}` — {s['student']}")
+        st.markdown(f"[DELIVERABLE]({s['link']})")
+        with st.expander("PROCESS LOG"):
+            st.write(s["process"])
+
+        if s["status"] == "PENDING":
+            c1, c2 = st.columns(2)
+            if c1.button("VERIFY", key="v"+s["id"]):
+                s["status"] = "VERIFIED"
+                stu = s["student"]
+                st.session_state.users[stu]["xp"] += s["reward"]
+                st.session_state.users[stu]["level"] = (
+                    st.session_state.users[stu]["xp"] // 100 + 1
+                )
+                st.success("VERIFIED")
+            if c2.button("REJECT", key="r"+s["id"]):
+                s["status"] = "REJECTED"
+                st.error("REJECTED")
+        st.markdown("</div>", unsafe_allow_html=True)
 
 # =====================================================
 # NEURAL IDENTITY
 # =====================================================
 elif page == "Neural Identity":
-    st.subheader("VERIFIED PROOF-OF-WORK LEDGER")
+    st.subheader("NEURAL IDENTITY")
 
-    for s in st.session_state.submissions:
-        if s["student"] == user and s["status"] == "VERIFIED":
-            st.markdown(f"""
-            <div class="v-card verified">
-                ✔ TASK {s['id']} — VERIFIED
-            </div>
-            """, unsafe_allow_html=True)
+    proofs = [
+        s for s in st.session_state.submissions
+        if s["student"] == user and s["status"] == "VERIFIED"
+    ]
+
+    if not proofs:
+        st.info("NO VERIFIED PROOFS YET")
+    else:
+        for p in proofs:
+            st.markdown("<div class='glass'>", unsafe_allow_html=True)
+            st.markdown(f"### `{p['id']}`")
+            st.markdown(f"COMPANY: `{p['company']}`")
+            st.markdown(f"<span class='badge'>VERIFIED</span>", unsafe_allow_html=True)
+            st.markdown("</div>", unsafe_allow_html=True)
